@@ -15,9 +15,11 @@ cost <- function(A, b, x) {
   sum( (A %*% x - b)^2 ) / (2 * length(b))
 }
 
+
 # Hyperparameters
 eta <- 0.01
 num_iters <- 1000
+lambda = 0.0
 
 # History
 cost_history <- double(num_iters)
@@ -29,11 +31,24 @@ x <- matrix(c(1, 2), nrow=2)
 # add a column of 1's for the intercept coefficient
 A <- cbind(1, matrix(a))
 
+R <- function(x) {
+  lambda*sum(abs(x))
+}
+
+soft_threshold <- function(x, eta) {
+  kappa = lambda*eta
+  for (i in 1:length(x)) {
+    x[i] = sign(x[i])*max(0.0, abs(x[i]) - kappa);
+  }
+  x
+}
+
 # gradient descent
 for (i in 1:num_iters) {
   error <- (A %*% x - b)
   delta <- t(A) %*% error / length(b)
-  x <- x - eta * delta
+  z <- x - eta * delta
+  x = soft_threshold(z, eta)
   cost_history[i] <- cost(A, b, x)
   x_history[[i]] <- x
 }
