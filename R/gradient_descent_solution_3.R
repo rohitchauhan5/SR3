@@ -19,7 +19,7 @@ cost <- function(A, b, x) {
 # Hyperparameters
 eta <- 0.01
 num_iters <- 1000
-lambda = 0.0
+lambda <- 0.01
 
 # History
 cost_history <- double(num_iters)
@@ -36,9 +36,9 @@ R <- function(x) {
 }
 
 soft_threshold <- function(x, eta) {
-  kappa = lambda*eta
+  kappa <- lambda*eta
   for (i in 1:length(x)) {
-    x[i] = sign(x[i])*max(0.0, abs(x[i]) - kappa);
+    x[i] <- sign(x[i])*max(0.0, abs(x[i]) - kappa);
   }
   x
 }
