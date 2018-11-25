@@ -1,7 +1,8 @@
 # Modified from http://digitheadslabnotebook.blogspot.com/2012/07/linear-regression-by-gradient-descent.html
+set.seed(1)
 
-a <- runif(1000, -5, 5)
-b <- a + rnorm(1000) + 3
+a <- runif(2, -5, 5)
+b <- a + rnorm(2) + 3
 
 built_in_regression <- function() {
   linreg <- lm( b ~ a )
@@ -16,20 +17,20 @@ R <- function(x) {
 }
 
 cost <- function(A, b, x) {
-  sum( (A %*% x - b)^2 ) / (2 * length(b)) + R(x)
+  sum( (A %*% x - b)^2 ) / (2 * length(b)) + lambda*R(x)
 }
 
 # Hyperparameters
 eta <- 0.01
 num_iters <- 1000
-lambda <- 0.01
+lambda <- 0.00
 
 # History
 cost_history <- double(num_iters)
 x_history <- list(num_iters)
 
 # Initialize weights
-x <- matrix(c(1, 2), nrow=2)
+x <- matrix(c(0, 0), nrow=2)
 
 # add a column of 1's for the intercept coefficient
 A <- cbind(1, matrix(a))
@@ -47,6 +48,7 @@ soft_threshold <- function(x, eta) {
 for (i in 1:num_iters) {
   error <- (A %*% x - b)
   delta <- t(A) %*% error / length(b)
+  # print(delta)
   z <- x - eta * delta
   x <- soft_threshold(z, eta)
   cost_history[i] <- cost(A, b, x)
@@ -61,4 +63,3 @@ for (i in c(1,3,6,10,14,seq(20,num_iters,by=10))) {
   abline(coef=x_history[[i]], col=rgb(0.8,0.0,0,0.3))
 }
 abline(coef=x, col='blue')
-
