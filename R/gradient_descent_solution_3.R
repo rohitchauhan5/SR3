@@ -11,10 +11,13 @@ built_in_regression <- function() {
 }
 built_in_regression()
 
-cost <- function(A, b, x) {
-  sum( (A %*% x - b)^2 ) / (2 * length(b))
+R <- function(x) {
+  lambda*sum(abs(x))
 }
 
+cost <- function(A, b, x) {
+  sum( (A %*% x - b)^2 ) / (2 * length(b)) + R(x)
+}
 
 # Hyperparameters
 eta <- 0.01
@@ -31,9 +34,6 @@ x <- matrix(c(1, 2), nrow=2)
 # add a column of 1's for the intercept coefficient
 A <- cbind(1, matrix(a))
 
-R <- function(x) {
-  lambda*sum(abs(x))
-}
 
 soft_threshold <- function(x, eta) {
   kappa <- lambda*eta
@@ -48,7 +48,7 @@ for (i in 1:num_iters) {
   error <- (A %*% x - b)
   delta <- t(A) %*% error / length(b)
   z <- x - eta * delta
-  x = soft_threshold(z, eta)
+  x <- soft_threshold(z, eta)
   cost_history[i] <- cost(A, b, x)
   x_history[[i]] <- x
 }
@@ -61,3 +61,4 @@ for (i in c(1,3,6,10,14,seq(20,num_iters,by=10))) {
   abline(coef=x_history[[i]], col=rgb(0.8,0.0,0,0.3))
 }
 abline(coef=x, col='blue')
+
