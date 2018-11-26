@@ -28,8 +28,8 @@ Hk <- function(A, kappa) {
 # Hyperparameters
 eta <- 0.01
 num_iters <- 1000
-lambda <- 0.1
-kappa = 10000
+lambda <- 0.001
+kappa = 1000
 
 # add a column of 1's for the intercept coefficient
 A <- cbind(1, matrix(a))
@@ -52,7 +52,10 @@ G_kappa <- function(A, HkInv, kappa) {
 }
 
 Fk <- F_kappa(A, HkInv, kappa)
+Rprof("performance_Gk")
+replicate(n=100, G_kapp(A, HkInc, kappa))
 Gk <- G_kappa(A, HkInv, kappa)
+Rprof(NULL)
 gk <- Gk %*% b
 
 
@@ -85,6 +88,7 @@ soft_threshold <- function(x, eta) {
 #   x_history[[i]] <- x
 # }
 
+# Rprof("performance_gradient_descent")
 for (i in 1:num_iters) {
   error <- (Fk %*% w - gk)
   delta <- t(Fk) %*% error / length(gk)
@@ -99,6 +103,8 @@ for (i in 1:num_iters) {
   w_history[[i]] <- w
   x_history[[i]] <- x
 }
+# Rprof(NULL)
+
 
 print(w)
 print(x)
@@ -109,3 +115,8 @@ for (i in c(1,3,6,10,14,seq(20,num_iters,by=10))) {
   abline(coef=x_history[[i]], col=rgb(0.8,0.0,0,0.3))
 }
 abline(coef=x, col='blue')
+
+summaryRprof("performance_gradient_descent")
+summaryRprof("performance_Fk")
+summaryRprof("performance_Gk")
+summaryRprof("performance_Hk")
