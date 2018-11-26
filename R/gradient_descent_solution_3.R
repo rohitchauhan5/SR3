@@ -20,41 +20,87 @@ cost <- function(A, b, x) {
   sum( (A %*% x - b)^2 ) / (2 * length(b)) + lambda*R(x)
 }
 
+Hk <- function(A, kappa) {
+  # C is the identity I matrix
+  t(A)%*%A + kappa
+}
+
 # Hyperparameters
 eta <- 0.01
 num_iters <- 1000
-lambda <- 0.5
-
-# History
-cost_history <- double(num_iters)
-x_history <- list(num_iters)
-
-# Initialize weights
-x <- matrix(c(0, 0), nrow=2)
+lambda <- 0.1
+kappa = 10000
 
 # add a column of 1's for the intercept coefficient
 A <- cbind(1, matrix(a))
 
+HkInv <- solve(Hk(A, kappa))
+
+F_kappa <- function(A, HkInv, kappa) {
+  I <- diag(nrow(HkInv))
+  r1 <- kappa*A%*%HkInv
+  r2 <- sqrt(kappa)*(I - kappa*HkInv)
+  rbind(r1, r2)
+}
+
+G_kappa <- function(A, HkInv, kappa) {
+  m <- nrow(A)
+  I <- diag(m)
+  r1 <- I - A %*% HkInv %*% t(A)
+  r2 <- sqrt(kappa) * HkInv %*% t(A)
+  rbind(r1, r2)
+}
+
+Fk <- F_kappa(A, HkInv, kappa)
+Gk <- G_kappa(A, HkInv, kappa)
+gk <- Gk %*% b
+
+
+# History
+x_cost_history <- double(num_iters)
+w_cost_history <- double(num_iters)
+x_history <- list(num_iters)
+w_history <- list(num_iters)
+
+# Initialize weights
+x <- matrix(c(0, 0), nrow=2)
+w <- matrix(c(0, 0), nrow=2)
+
 
 soft_threshold <- function(x, eta) {
-  kappa <- lambda*eta
   for (i in 1:length(x)) {
-    x[i] <- sign(x[i])*max(0.0, abs(x[i]) - kappa);
+    x[i] <- sign(x[i])*max(0.0, abs(x[i]) - lambda*eta);
   }
   x
 }
 
 # gradient descent
+# for (i in 1:num_iters) {
+#   error <- (A %*% x - b)
+#   delta <- t(A) %*% error / length(b)
+#   # print(delta)
+#   z <- x - eta * delta
+#   x <- soft_threshold(z, eta)
+#   cost_history[i] <- cost(A, b, x)
+#   x_history[[i]] <- x
+# }
+
 for (i in 1:num_iters) {
-  error <- (A %*% x - b)
-  delta <- t(A) %*% error / length(b)
+  error <- (Fk %*% w - gk)
+  delta <- t(Fk) %*% error / length(gk)
   # print(delta)
-  z <- x - eta * delta
-  x <- soft_threshold(z, eta)
-  cost_history[i] <- cost(A, b, x)
+  z <- w - eta * delta
+  w <- soft_threshold(z, eta)
+  
+  x <- HkInv %*% (t(A) %*% b + kappa * w)
+  
+  w_cost_history[i] <- cost(Fk, gk, w)
+  x_cost_history[i] <- cost(A, b, x)
+  w_history[[i]] <- w
   x_history[[i]] <- x
 }
 
+print(w)
 print(x)
 
 # plot data and converging fit
