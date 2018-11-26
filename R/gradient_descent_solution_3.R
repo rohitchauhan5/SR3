@@ -1,8 +1,8 @@
 # Modified from http://digitheadslabnotebook.blogspot.com/2012/07/linear-regression-by-gradient-descent.html
-set.seed(1)
+set.seed(42)
 
-a <- runif(2, -5, 5)
-b <- a + rnorm(2) + 3
+a <- runif(1000, -5, 5)
+b <- a + rnorm(1000) + 3
 
 built_in_regression <- function() {
   linreg <- lm( b ~ a )
@@ -23,7 +23,7 @@ cost <- function(A, b, x) {
 # Hyperparameters
 eta <- 0.01
 num_iters <- 1000
-lambda <- 0.00
+lambda <- 0.5
 
 # History
 cost_history <- double(num_iters)
