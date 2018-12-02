@@ -9,7 +9,7 @@ built_in_regression()
 eta <- 0.01
 num_iters <- 1000
 lambda <- 0.01
-kappa = 10000
+kappa <- 10000
 
 HkInv <- solve(Hk(A, kappa))
 
