@@ -1,5 +1,5 @@
 # Use R internal library functions to validate results
-built_in_regression <- function() {
+built_in_regression <- function(a, b) {
   linreg <- lm( b ~ a )
   print(linreg)
   plot(a, b)
