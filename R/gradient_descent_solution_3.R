@@ -3,7 +3,7 @@ source("/Users/zarak/Courses/SR3/R/synthetic_data.R")
 source("/Users/zarak/Courses/SR3/R/utility.R")
 source("/Users/zarak/Courses/SR3/R/SR3.R")
 
-built_in_regression(a1, b)
+built_in_regression(a, b)
 
 # Hyperparameters
 eta <- 0.01
@@ -25,8 +25,8 @@ x_history <- list(num_iters)
 w_history <- list(num_iters)
 
 # Initialize weights
-x <- matrix(0, nrow=4, ncol=1)
-w <- matrix(0, nrow=4, ncol=1)
+x <- matrix(0, nrow=ncol(A), ncol=1)
+w <- matrix(0, nrow=ncol(A), ncol=1)
 
 # gradient descent
 # for (i in 1:num_iters) {
@@ -58,4 +58,4 @@ for (i in 1:num_iters) {
 print(w)
 print(x)
 
-# make_plots(a, b, x, x_history)
+make_plots(a, b, x, x_history)
