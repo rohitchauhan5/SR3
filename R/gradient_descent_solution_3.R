@@ -1,55 +1,17 @@
 # Modified from http://digitheadslabnotebook.blogspot.com/2012/07/linear-regression-by-gradient-descent.html
-set.seed(42)
+source("synthetic_data.R")
+source("utility.R")
+source("SR3.R")
 
-a <- runif(1000, -5, 5)
-b <- a + rnorm(1000) + 3
-
-built_in_regression <- function() {
-  linreg <- lm( b ~ a )
-  print(linreg)
-  plot(a, b)
-  abline(linreg, col='red')
-}
 built_in_regression()
-
-R <- function(x) {
-  lambda*sum(abs(x))
-}
-
-cost <- function(A, b, x) {
-  sum( (A %*% x - b)^2 ) / (2 * length(b)) + lambda*R(x)
-}
-
-Hk <- function(A, kappa) {
-  # C is the identity I matrix
-  t(A)%*%A + kappa
-}
 
 # Hyperparameters
 eta <- 0.01
 num_iters <- 1000
-lambda <- 0.1
+lambda <- 0.01
 kappa = 10000
 
-# add a column of 1's for the intercept coefficient
-A <- cbind(1, matrix(a))
-
 HkInv <- solve(Hk(A, kappa))
-
-F_kappa <- function(A, HkInv, kappa) {
-  I <- diag(nrow(HkInv))
-  r1 <- kappa*A%*%HkInv
-  r2 <- sqrt(kappa)*(I - kappa*HkInv)
-  rbind(r1, r2)
-}
-
-G_kappa <- function(A, HkInv, kappa) {
-  m <- nrow(A)
-  I <- diag(m)
-  r1 <- I - A %*% HkInv %*% t(A)
-  r2 <- sqrt(kappa) * HkInv %*% t(A)
-  rbind(r1, r2)
-}
 
 Fk <- F_kappa(A, HkInv, kappa)
 Gk <- G_kappa(A, HkInv, kappa)
@@ -66,14 +28,6 @@ w_history <- list(num_iters)
 x <- matrix(c(0, 0), nrow=2)
 w <- matrix(c(0, 0), nrow=2)
 
-
-soft_threshold <- function(x, eta) {
-  for (i in 1:length(x)) {
-    x[i] <- sign(x[i])*max(0.0, abs(x[i]) - lambda*eta);
-  }
-  x
-}
-
 # gradient descent
 # for (i in 1:num_iters) {
 #   error <- (A %*% x - b)
@@ -85,6 +39,7 @@ soft_threshold <- function(x, eta) {
 #   x_history[[i]] <- x
 # }
 
+# Proximal gradient descent
 for (i in 1:num_iters) {
   error <- (Fk %*% w - gk)
   delta <- t(Fk) %*% error / length(gk)
@@ -94,8 +49,8 @@ for (i in 1:num_iters) {
   
   x <- HkInv %*% (t(A) %*% b + kappa * w)
   
-  w_cost_history[i] <- cost(Fk, gk, w)
-  x_cost_history[i] <- cost(A, b, x)
+  w_cost_history[i] <- cost(Fk, gk, w, lambda)
+  x_cost_history[i] <- cost(A, b, x, lambda)
   w_history[[i]] <- w
   x_history[[i]] <- x
 }
@@ -103,9 +58,4 @@ for (i in 1:num_iters) {
 print(w)
 print(x)
 
-# plot data and converging fit
-plot(a,b, col=rgb(0.2,0.4,0.6,0.4), main='Linear regression by gradient descent')
-for (i in c(1,3,6,10,14,seq(20,num_iters,by=10))) {
-  abline(coef=x_history[[i]], col=rgb(0.8,0.0,0,0.3))
-}
-abline(coef=x, col='blue')
+make_plots(a, b, x, x_history)
