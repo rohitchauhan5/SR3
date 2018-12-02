@@ -1,7 +1,7 @@
 # Modified from http://digitheadslabnotebook.blogspot.com/2012/07/linear-regression-by-gradient-descent.html
-source("synthetic_data.R")
-source("utility.R")
-source("SR3.R")
+source("/Users/zarak/Courses/SR3/R/synthetic_data.R")
+source("/Users/zarak/Courses/SR3/R/utility.R")
+source("/Users/zarak/Courses/SR3/R/SR3.R")
 
 built_in_regression(a1, b)
 
