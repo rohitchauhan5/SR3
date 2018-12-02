@@ -6,19 +6,20 @@ source("/Users/zarak/Courses/SR3/R/SR3.R")
 built_in_regression(a, b)
 
 # Hyperparameters
-eta <- 0.01
-num_iters <- 1000
-lambda <- 0.01
-kappa <- 10000
+eta <- 0.01         # Learning rate
+num_iters <- 1000   # Fixed number of iterations
+lambda <- 0.01      # Regularization strength
+kappa <- 10000      # Relaxation parameter
 
+# SR3 and Value Function Optimization
+# See page 2, section II-A of paper
 HkInv <- solve(Hk(A, kappa))
 
 Fk <- F_kappa(A, HkInv, kappa)
 Gk <- G_kappa(A, HkInv, kappa)
 gk <- Gk %*% b
 
-
-# History
+# Store parameter history
 x_cost_history <- double(num_iters)
 w_cost_history <- double(num_iters)
 x_history <- list(num_iters)
@@ -41,12 +42,15 @@ w <- matrix(0, nrow=ncol(A), ncol=1)
 
 # Proximal gradient descent
 for (i in 1:num_iters) {
+  # Compute residuals
   error <- (Fk %*% w - gk)
+  # Compute gradient
   delta <- t(Fk) %*% error / length(gk)
-  # print(delta)
+  # Take one gradient step
   z <- w - eta * delta
+  # Proximal L1 operator
   w <- soft_threshold(z, eta)
-  
+  # Recover original weights
   x <- HkInv %*% (t(A) %*% b + kappa * w)
   
   w_cost_history[i] <- cost(Fk, gk, w, lambda)
