@@ -17,7 +17,7 @@ R <- function(x, lambda = 1) {
 #' @param lambda Scalar to control strength of regularization
 #' @return Loss of least squares problem regularized by
 #' R with strength lambda
-cost <- function(A, b, x, lambda = 1) {
+cost <- function(A, b, x, lambda = 1, C) {
   sum( (A %*% x - b)^2 ) / (2 * length(b)) + lambda*R(x)
 }
 
@@ -26,12 +26,13 @@ cost <- function(A, b, x, lambda = 1) {
 #'
 #' @param A m x d real valued matrix representing
 #' linear data generating mechanism
+#' @param C Linear map C
 #' @param kappa Relaxation parameter to control gap
 #' between x and w
 #' @return d x d matrix
 Hk <- function(A, kappa, C) {
   # C is the identity I matrix
-  t(A)%*%A + kappa * t(C) %*% C
+  t(A) %*% A + kappa * t(C) %*% C
 }
 
 #' Function to compute matrix F_k
@@ -39,13 +40,14 @@ Hk <- function(A, kappa, C) {
 #' @param A m x d real valued matrix representing
 #' linear data generating mechanism
 #' @param HkInv Inverse of matrix Hk
+#' @param C Linear map C
 #' @param kappa Relaxation parameter to control gap
 #' between x and w
 #' @return Matrix with shape (m + d) x d
-F_kappa <- function(A, HkInv, kappa) {
+F_kappa <- function(A, HkInv, kappa, C) {
   I <- diag(nrow(HkInv))
-  r1 <- kappa*A%*%HkInv
-  r2 <- sqrt(kappa)*(I - kappa*HkInv)
+  r1 <- kappa * A %*% HkInv %*% t(C)
+  r2 <- sqrt(kappa)*(I - kappa * C %*% HkInv %*% t(C))
   rbind(r1, r2)
 }
 
@@ -54,14 +56,15 @@ F_kappa <- function(A, HkInv, kappa) {
 #' @param A m x d real valued matrix representing
 #' linear data generating mechanism
 #' @param HkInv Inverse of matrix Hk
+#' @param C Linear map C
 #' @param kappa Relaxation parameter to control gap
 #' between x and w
 #' @return Matrix with shape (m + d) x m
-G_kappa <- function(A, HkInv, kappa) {
+G_kappa <- function(A, HkInv, kappa, C) {
   m <- nrow(A)
   I <- diag(m)
   r1 <- I - A %*% HkInv %*% t(A)
-  r2 <- sqrt(kappa) * HkInv %*% t(A)
+  r2 <- sqrt(kappa) * C %*% HkInv %*% t(A)
   rbind(r1, r2)
 }
 
