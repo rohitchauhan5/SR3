@@ -1,0 +1,19 @@
+Package: SR3
+Title: A Unified Framework for Sparse Relaxed
+Regularized Regression
+Version: 0.0.0.9000
+Authors@R: c(
+person("First", "Last", email = "first.last@example.com", role = c("aut", "cre")),
+person("First", "Last", email = "first.last@example.com", role = c("aut", "cre")),
+person("First", "Last", email = "first.last@example.com", role = c("aut", "cre")),
+Description: The key idea is to solve a relaxation of the regularized problem,
+which has three advantages over the state-of-the-art: (1) solutions
+of the relaxed problem are superior with respect to errors, false
+positives, and conditioning, (2) relaxation allows extremely fast
+algorithms for both convex and nonconvex formulations, and
+(3) the methods apply to composite regularizers such as total
+variation (TV) and its nonconvex variants.
+Depends: R (>= 3.5.1)
+License: MIT
+Encoding: UTF-8
+LazyData: true
