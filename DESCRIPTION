@@ -3,9 +3,12 @@ Title: A Unified Framework for Sparse Relaxed
 Regularized Regression
 Version: 0.0.0.9000
 Authors@R: c(
-person("First", "Last", email = "first.last@example.com", role = c("aut", "cre")),
-person("First", "Last", email = "first.last@example.com", role = c("aut", "cre")),
-person("First", "Last", email = "first.last@example.com", role = c("aut", "cre")),
+person("Zarak", "Mahmud", email = "first.last@example.com", role = c("aut", "cre")),
+person("Rohit", "Chauhan", email = "first.last@example.com", role = c("aut", "cre")),
+person("Michael", "Liotti", email = "first.last@example.com", role = c("aut")),
+person("Travis", "Askham", email = "first.last@example.com", role = c("cph")),
+person("Peng", "Zheng", email = "first.last@example.com", role = c("cph"))
+)
 Description: The key idea is to solve a relaxation of the regularized problem,
 which has three advantages over the state-of-the-art: (1) solutions
 of the relaxed problem are superior with respect to errors, false
