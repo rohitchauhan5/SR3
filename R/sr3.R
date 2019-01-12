@@ -47,5 +47,7 @@ sr3_parse_input <- function(A, b, m, n, ...) {
 #' @param A double precision real or complex matrix (dimension, say, MxN)
 #' @param b double precision real or complex vector (length M)
 sr3 <- function(A, b, ...) {
-  print("hi")
+  m <- dim(A)[1]
+  n <- dim(A)[2]
+
 }
