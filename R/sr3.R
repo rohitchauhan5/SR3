@@ -6,6 +6,34 @@
 sr3_parse_input <- function(A, b, m, n, ...) {
   l1R <- function(x) sum(abs(x))
   l1Rprox <- function(x, alpha) sign(x) %*% (abs(x) - alpha) %*% (abs(x) > alpha)
+
+  defaultx0 <- matrix(0, n, 1)
+  defaultw0 <- matrix(0, n, 1)
+  defaultC <- diag(n) # TODO: Convert this to sparse
+  defaultlam <- 1.0
+  defaultkap <- 1.0
+  defaultitm <- 100
+  defaulttol <- 1e-6
+  defaultptf <- 0
+  defaultmode <- '1'
+  defaultl0w <- 0.0
+  defaultl1w <- 0.0
+  defaultl2w <- 0.0
+  defaultR <- l1R
+  defaultRprox <- l1Rprox
+  defaultifusenormal <- 0
+  defaultifuselsqr <- 0
+
+  isdouble <- function(x) checkDouble(x)
+  isdoublep <- function(x) checkDouble(x, lower = 0) && all(x > 0)
+  isdoublepp <- function(x) checkDouble(x, lower = 0)
+  isdoublem <- function(x) checkDouble(x, lower = 0, len = m)
+  isdoublem <- function(x) checkDouble(x, lower = 0, len = n)
+  isnumericp <- function(x) checkNumeric(x) && x > 0
+  isnumericp <- function(x) checkNumeric(x, lower = 0)
+  # isfunhandle = @(x) isa(x,'function_handle')
+
+
 }
 
 #' SR3
