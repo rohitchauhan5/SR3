@@ -14,7 +14,7 @@ algorithms for both convex and nonconvex formulations, and
 (3) the methods apply to composite regularizers such as total
 variation (TV) and its nonconvex variants.
 Depends: R (>= 3.5.1)
-License: MIT
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports:
