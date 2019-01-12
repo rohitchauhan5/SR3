@@ -17,8 +17,8 @@ sr3_parse_input <- function(A, b, m, n, ...) {
   defaultl0w <- 0.0
   defaultl1w <- 0.0
   defaultl2w <- 0.0
-  defaultR <- l1R
-  defaultRprox <- l1Rprox
+  defaultR <- .l1R
+  defaultRprox <- .l1Rprox
   defaultifusenormal <- 0
   defaultifuselsqr <- 0
 
@@ -45,13 +45,13 @@ sr3 <- function(A, b, ...) {
 
 ### helper functions
 
-l1R <- function(x) sum(abs(x))
-l1Rprox <- function(x, alpha) sign(x) %*% (abs(x) - alpha) %*% (abs(x) > alpha)
+.l1R <- function(x) sum(abs(x))
+.l1Rprox <- function(x, alpha) sign(x) %*% (abs(x) - alpha) %*% (abs(x) > alpha)
 
-isdouble <- function(x) checkDouble(x)
-isdoublep <- function(x) checkDouble(x, lower = 0) && all(x > 0)
-isdoublepp <- function(x) checkDouble(x, lower = 0)
-isdoublem <- function(x) checkDouble(x, lower = 0, len = m)
-isdoublem <- function(x) checkDouble(x, lower = 0, len = n)
-isnumericp <- function(x) checkNumeric(x) && x > 0
-isnumericp <- function(x) checkNumeric(x, lower = 0)
+.isdouble <- function(x) checkmate::checkDouble(x)
+.isdoublep <- function(x) checkmate::checkDouble(x, lower = 0) && all(x > 0)
+.isdoublepp <- function(x) checkmate::checkDouble(x, lower = 0)
+.isdoublem <- function(x) checkmate::checkDouble(x, lower = 0, len = m)
+.isdoublem <- function(x) checkmate::checkDouble(x, lower = 0, len = n)
+.isnumericp <- function(x) checkmate::checkNumeric(x) && x > 0
+.isnumericp <- function(x) checkmate::checkNumeric(x, lower = 0)
