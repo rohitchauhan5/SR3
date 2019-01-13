@@ -1,11 +1,18 @@
+# Helper functions
 .l1R <- function(x) sum(abs(x))
 .l1Rprox <- function(x, alpha) sign(x) * (abs(x) - alpha) * (abs(x) > alpha)
 
-#' SR3_PARSE_INPUT parse the input to SR3
+
+#' Parse the input to SR3
 #'
 #' Sets default values and checks types (within reason)
 #'
-#'
+#' @param A double precision real or complex matrix (dimension, say, MxN)
+#' @param b double precision real or complex vector (length M)
+#' @param m number of rows of A
+#' @param n number of columns of A
+#' @param ... optional arguments
+#' @return List of \code{R} and \code{Rprox}
 sr3_parse_input <- function(A, b, m, n, ...) {
 
   defaultx0 <- matrix(0, n, 1)
@@ -67,10 +74,10 @@ sr3_parse_input <- function(A, b, m, n, ...) {
 }
 
 
-#' Function to returRprnl1w' prox operator and regularization function
-#'                  ifu l2w'
-#' @param p Parser lifuiR',dst with input values
-reg_prox <- function(Rprop) {
+#' Function to return prox operator and regularization function
+#'
+#' @param p Parser list with input values
+reg_prox <- function(p) {
   # TODO: Replace placeholders with actual functions
   R <- function(x) NULL
   Rprox <- function(x) NULL
@@ -78,16 +85,18 @@ reg_prox <- function(Rprop) {
   return(list(R, Rprox))
 }
 
+
 #' SR3
 #'
 #' SR3 Relaxed pursuit method for regularized least squares problems
 #' of the form:
-#'    0.5*norm(A*x-b,2)^2 + lam*R(w) + 0.5*kap*norm(C*x-w,2)^2
+#'    \code{0.5*norm(A*x-b,2)^2 + lam*R(w) + 0.5*kap*norm(C*x-w,2)^2}
 #' over x and w. The output w represents a regularized solution of
 #' the least squares problem described by A and b.
 #'
 #' @param A double precision real or complex matrix (dimension, say, MxN)
 #' @param b double precision real or complex vector (length M)
+#' @param ... Optional arguments
 sr3 <- function(A, b, ...) {
   m <- dim(A)[1]
   n <- dim(A)[2]

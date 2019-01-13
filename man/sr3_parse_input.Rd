@@ -2,9 +2,23 @@
 % Please edit documentation in R/sr3.R
 \name{sr3_parse_input}
 \alias{sr3_parse_input}
-\title{SR3_PARSE_INPUT parse the input to SR3}
+\title{Parse the input to SR3}
 \usage{
 sr3_parse_input(A, b, m, n, ...)
+}
+\arguments{
+\item{A}{double precision real or complex matrix (dimension, say, MxN)}
+
+\item{b}{double precision real or complex vector (length M)}
+
+\item{m}{number of rows of A}
+
+\item{n}{number of columns of A}
+
+\item{...}{optional arguments}
+}
+\value{
+List of \code{R} and \code{Rprox}
 }
 \description{
 Sets default values and checks types (within reason)
