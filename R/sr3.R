@@ -31,37 +31,46 @@ sr3_parse_input <- function(A, b, m, n, ...) {
   isdoublem <- function(x) checkmate::checkDouble(x, lower = 0, len = m)
   isdoublen <- function(x) checkmate::checkDouble(x, lower = 0, len = n)
   isnumericp <- function(x) checkmate::checkNumeric(x) && x > 0
-  isnumericp <- function(x) checkmate::checkNumeric(x, lower = 0)
-  # isfunhandle = @(x) isa(x,'function_handle')
+  isnumericpp <- function(x) checkmate::checkNumeric(x, lower = 0)
+  isfunhandle <- function(x) checkmate::checkFunction(x)
 
   isdouble(A)
   isdoublem(b)
   isdoublen(defaultx0) # x0
   isdouble(defaultw0)# w0
-#  'C',defaultC,isdouble);
-#  'lam',defaultlam,isdoublep);
-#  'kap',defaultkap,isdoublep);
-#  'itm',defaultitm,isnumericp);
-#  'tol',defaulttol,isdoublep);
-#  'ptf',defaultptf,isnumericpp);
-#  'mode',defaultmode,@ischar);
-#  'l0w',defaultl0w,isdoublepp);
-#  'l1w',defaultl1w,isdoublepp);
-#  'l2w',defaultl2w,isdoublepp);
-#  'R',defaultR,isfunhandle);
-#  'Rprox',defaultRprox,isfunhandle);
-#  'ifusenormal',defaultifusenormal,@isnumeric);
-#  'ifuselsqr',defaultifuselsqr,@isnumeric);
-  parse <- list(A, b, defaultx0, defaultw0)
-  names(parse) <- c("A", "b", "x0", "w0")
+  isdouble(defaultC)
+  isdoublep(defaultlam)
+  isdoublep(defaultkap)
+  isnumericp(defaultitm)
+  isdoublep(defaulttol)
+  isnumericpp(defaultptf)
 
+  # TODO: Check if default mode is char
+  isdoublepp(defaultl0w)
+  isdoublepp(defaultl1w)
+  isdoublepp(defaultl2w)
+  isfunhandle(defaultR)
+  isfunhandle(defaultRprox)
+
+  # TODO: Check if these variables are numeric
+  # defaultifusenormal
+  # defaultifuselsqr
+
+  parse <- list(A, b, defaultx0, defaultw0, defaultC, defaultlam,
+                defaultkap, defaultitm, defaulttol, defaultptf,
+                defaultmode, defaultl0w, defaultl1w, defaultl2w,
+                defaultR, defaultRprox, defaultifusenormal, defaultifuselsqr)
+  names(parse) <- c("A", "b", "x0", "w0", "C", "lam", "kap",
+                    "itm", "tol", "ptf", "mode", "l0w", "l1w",
+                    "l2w", "R", "Rprox", "ifusenormal", "ifuselsqr")
+  return(parse)
 }
 
 
-#' Function to return prox operator and regularization function
-#'
-#' @param p Parser list with input values
-reg_prox <- function(p) {
+#' Function to returRprnl1w' prox operator and regularization function
+#'                  ifu l2w'
+#' @param p Parser lifuiR',dst with input values
+reg_prox <- function(Rprop) {
   # TODO: Replace placeholders with actual functions
   R <- function(x) NULL
   Rprox <- function(x) NULL
