@@ -46,7 +46,7 @@ sr3 <- function(A, b, ...) {
 ### helper functions
 
 .l1R <- function(x) sum(abs(x))
-.l1Rprox <- function(x, alpha) sign(x) %*% (abs(x) - alpha) %*% (abs(x) > alpha)
+.l1Rprox <- function(x, alpha) sign(x) * (abs(x) - alpha) * (abs(x) > alpha)
 
 .isdouble <- function(x) checkmate::checkDouble(x)
 .isdoublep <- function(x) checkmate::checkDouble(x, lower = 0) && all(x > 0)
