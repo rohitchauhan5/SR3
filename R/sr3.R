@@ -33,6 +33,40 @@ sr3_parse_input <- function(A, b, m, n, ...) {
   isnumericp <- function(x) checkmate::checkNumeric(x) && x > 0
   isnumericp <- function(x) checkmate::checkNumeric(x, lower = 0)
   # isfunhandle = @(x) isa(x,'function_handle')
+
+  isdouble(A)
+  isdoublem(b)
+  isdoublen(defaultx0) # x0
+  isdouble(defaultw0)# w0
+#  'C',defaultC,isdouble);
+#  'lam',defaultlam,isdoublep);
+#  'kap',defaultkap,isdoublep);
+#  'itm',defaultitm,isnumericp);
+#  'tol',defaulttol,isdoublep);
+#  'ptf',defaultptf,isnumericpp);
+#  'mode',defaultmode,@ischar);
+#  'l0w',defaultl0w,isdoublepp);
+#  'l1w',defaultl1w,isdoublepp);
+#  'l2w',defaultl2w,isdoublepp);
+#  'R',defaultR,isfunhandle);
+#  'Rprox',defaultRprox,isfunhandle);
+#  'ifusenormal',defaultifusenormal,@isnumeric);
+#  'ifuselsqr',defaultifuselsqr,@isnumeric);
+  parse <- list(A, b, defaultx0, defaultw0)
+  names(parse) <- c("A", "b", "x0", "w0")
+
+}
+
+
+#' Function to return prox operator and regularization function
+#'
+#' @param p Parser list with input values
+reg_prox <- function(p) {
+  # TODO: Replace placeholders with actual functions
+  R <- function(x) NULL
+  Rprox <- function(x) NULL
+
+  return(list(R, Rprox))
 }
 
 #' SR3
