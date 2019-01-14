@@ -74,14 +74,17 @@ sr3_parse_input <- function(A, b, m, n, ...) {
 }
 
 
+#' Prox operators
+#'
 #' Function to return prox operator and regularization function
 #'
-#' @param p Parser list with input values
+#' @param p The mode argument to \code{sr3_parse_input} which specifies
+#' the type of regularization
+#' @return A list of \code{R} and \code{Rprox}
 reg_prox <- function(p) {
   # TODO: Replace placeholders with actual functions
   R <- function(x) NULL
   Rprox <- function(x) NULL
-
 
   return(list(R = R, Rprox = Rprox))
 }
