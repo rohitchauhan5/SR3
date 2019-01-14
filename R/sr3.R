@@ -82,7 +82,8 @@ reg_prox <- function(p) {
   R <- function(x) NULL
   Rprox <- function(x) NULL
 
-  return(list(R, Rprox))
+
+  return(list(R = R, Rprox = Rprox))
 }
 
 
@@ -100,6 +101,4 @@ reg_prox <- function(p) {
 sr3 <- function(A, b, ...) {
   m <- dim(A)[1]
   n <- dim(A)[2]
-
 }
-
