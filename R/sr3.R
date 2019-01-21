@@ -41,23 +41,25 @@ sr3_parse_input <- function(A, b, m, n, ...) {
   isnumericpp <- function(x) checkmate::checkNumeric(x, lower = 0)
   isfunhandle <- function(x) checkmate::checkFunction(x)
 
-  isdouble(A)
-  isdoublem(b)
-  isdoublen(defaultx0) # x0
-  isdouble(defaultw0)# w0
-  isdouble(defaultC)
-  isdoublep(defaultlam)
-  isdoublep(defaultkap)
-  isnumericp(defaultitm)
-  isdoublep(defaulttol)
-  isnumericpp(defaultptf)
-
+  validate_input <- c(
+  isdouble(A),
+  isdoublem(b),
+  isdoublen(defaultx0), # x0
+  isdouble(defaultw0), # w0
+  isdouble(defaultC),
+  isdoublep(defaultlam),
+  isdoublep(defaultkap),
+  isnumericp(defaultitm),
+  isdoublep(defaulttol),
+  isnumericpp(defaultptf),
   # TODO: Check if default mode is char
-  isdoublepp(defaultl0w)
-  isdoublepp(defaultl1w)
-  isdoublepp(defaultl2w)
-  isfunhandle(defaultR)
+  checkmate::checkCharacter(defaultmode),
+  isdoublepp(defaultl0w),
+  isdoublepp(defaultl1w),
+  isdoublepp(defaultl2w),
+  isfunhandle(defaultR),
   isfunhandle(defaultRprox)
+  )
 
   # TODO: Check if these variables are numeric
   # defaultifusenormal
