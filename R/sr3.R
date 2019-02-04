@@ -78,8 +78,8 @@ sr3_parse_input <- function(A, b, m, n, ...) {
 #'
 #' Function to return prox operator and regularization function
 #'
-#' @param p The mode argument to \code{sr3_parse_input} which specifies
-#' the type of regularization
+#' @param p The argument to \code{sr3_parse_input} which is a list that
+#' contains the mode variable for regularization
 #' @return A list of \code{R} and \code{Rprox}
 reg_prox <- function(p) {
   # TODO: Replace placeholders with actual functions
@@ -104,4 +104,31 @@ reg_prox <- function(p) {
 sr3 <- function(A, b, ...) {
   m <- dim(A)[1]
   n <- dim(A)[2]
+  
+  parsed <- sr3_parse_input(A, b, m, n)
+  
+  results <- reg_prox(parsed)
+  Rfunc <- results$R
+  Rproc <- results$Rprox
+  
+  x <- parsed$x0
+  w <- parsed$w0
+  C <- parsed$C
+  lam <- parsed$lam
+  kap <- parsed$kap
+  itm <- parsed$itm
+  tol <- parsed$tol
+  ptf <- parsed$ptf
+  ifusenormal <- parsed$ifusenormal
+  ifuselsqr <- parsed$ifuselsqr
+  
+  md <- nrow(C)
+  if (md != n) w <- matrix(0L, nrow = md, ncol = 1)
+  
+  rootkap = sqrt(kap)
+  alpha = lam/kap
+  
+  sys = rbind(A, rootkap*C)
+#   u = [b;rootkap*w];
+#   x = lsqr(sys,u,tol/2,100,[],[],x); 
 }
