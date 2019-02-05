@@ -4,11 +4,11 @@
 \alias{reg_prox}
 \title{Prox operators}
 \usage{
-reg_prox(p)
+reg_prox(p, alpha)
 }
 \arguments{
-\item{p}{The mode argument to \code{sr3_parse_input} which specifies
-the type of regularization}
+\item{p}{The argument to \code{sr3_parse_input} which is a list that
+contains the mode variable for regularization}
 }
 \value{
 A list of \code{R} and \code{Rprox}

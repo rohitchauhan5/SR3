@@ -81,10 +81,13 @@ sr3_parse_input <- function(A, b, m, n, ...) {
 #' @param p The argument to \code{sr3_parse_input} which is a list that
 #' contains the mode variable for regularization
 #' @return A list of \code{R} and \code{Rprox}
-reg_prox <- function(p) {
-  # TODO: Replace placeholders with actual functions
-  R <- function(x) NULL
-  Rprox <- function(x) NULL
+reg_prox <- function(p, alpha) {
+  l1w <- p$l1w
+  R <- function(x) l1w*sum(abs(x))
+  Rprox <- function(x, alpha) {
+    alpha1 = l1w*alpha
+    sign(x) * (abs(x) - alpha1) * (abs(x) > alpha1)
+  }
 
   return(list(R = R, Rprox = Rprox))
 }
@@ -107,9 +110,6 @@ sr3 <- function(A, b, ...) {
   
   parsed <- sr3_parse_input(A, b, m, n)
   
-  results <- reg_prox(parsed)
-  Rfunc <- results$R
-  Rproc <- results$Rprox
   
   x <- parsed$x0
   w <- parsed$w0
@@ -125,10 +125,42 @@ sr3 <- function(A, b, ...) {
   md <- nrow(C)
   if (md != n) w <- matrix(0L, nrow = md, ncol = 1)
   
-  rootkap = sqrt(kap)
-  alpha = lam/kap
+  rootkap <- sqrt(kap)
+  alpha <- lam/kap
   
-  sys = rbind(A, rootkap*C)
-#   u = [b;rootkap*w];
-#   x = lsqr(sys,u,tol/2,100,[],[],x); 
+  results <- reg_prox(parsed, alpha)
+  Rfunc <- results$R
+  Rprox <- results$Rprox
+  
+  # TODO: use the normal equations and Cholesky factorization
+  
+  # Least squares
+  sys <- rbind(A, rootkap * C)
+  u <- rbind(b, rootkap * w)
+  # x = lsqr(sys,u,tol/2,100,[],[], x); 
+  x <- solve(sys, u, tol/2)
+  
+  # TODO: QR
+  wm <- w
+  err <- 2.0 * tol
+  noi <- 0
+  
+  normb <- norm(b, type = '2')
+  
+  while (err >= tol) {
+    if (ifuselsqr) {
+      u <- rbind(b, rootkap * w)
+      x <- solve(sys, u, tol/2) 
+    }
+    
+    y <- C %*% x
+    
+    w <- Rprox(y, alpha)
+    
+    # TODO: write obj
+    err = sqrt(sum((w - wm)^2)) / normb
+  
+  }
+  
+  
 }
