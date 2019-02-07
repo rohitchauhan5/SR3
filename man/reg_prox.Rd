@@ -9,6 +9,9 @@ reg_prox(p, alpha)
 \arguments{
 \item{p}{The argument to \code{sr3_parse_input} which is a list that
 contains the mode variable for regularization}
+
+\item{alpha}{Penalty term for R (\code{lam}) divided by penalty term for
+relaxed expression (\code{kap}).}
 }
 \value{
 A list of \code{R} and \code{Rprox}
