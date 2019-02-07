@@ -35,16 +35,14 @@ sr3_parse_input <- function(A, b, m, n, ...) {
   isdouble <- function(x) checkmate::expect_double(x)
   isdoublep <- function(x) checkmate::expect_double(x, lower = 0) && all(x > 0)
   isdoublepp <- function(x) checkmate::expect_double(x, lower = 0)
-  isdoublem <- function(x) checkmate::expect_double(x, lower = 0, len = m)
-  isdoublen <- function(x) checkmate::expect_double(x, lower = 0, len = n)
+  isdoublem <- function(x) checkmate::expect_double(x, len = m)
+  isdoublen <- function(x) checkmate::expect_double(x, len = n)
   isnumericp <- function(x) checkmate::expect_numeric(x) && x > 0
   isnumericpp <- function(x) checkmate::expect_numeric(x, lower = 0)
   isfunhandle <- function(x) checkmate::expect_function(x)
 
-  # TODO: Have actual assertions or change above functions to
-  # expect_* variants
   isdouble(A)
-  isdoublen(b)
+  isdoublem(b)
   isdoublen(defaultx0) # x0
   isdouble(defaultw0)# w0
   isdouble(defaultC)
@@ -132,9 +130,12 @@ sr3 <- function(A, b, ...) {
   rootkap <- sqrt(kap)
   alpha <- lam/kap
   
-  results <- reg_prox(parsed, alpha)
-  Rfunc <- results$R
-  Rprox <- results$Rprox
+  Rfunc <- parsed$R
+  Rprox <- parsed$Rprox
+  # Use this to override defaults
+  # results <- reg_prox(parsed, alpha)
+  # Rfunc <- results$R
+  # Rprox <- results$Rprox
   
   # TODO: use the normal equations and Cholesky factorization
   
@@ -162,9 +163,19 @@ sr3 <- function(A, b, ...) {
     w <- Rprox(y, alpha)
     
     # TODO: write obj
-    err = sqrt(sum((w - wm)^2)) / normb
-  
+    # obj = 0.5*sum((A*x-b).^2) + lam*Rfunc(w) + 0.5*kap*sum((y-w).^2);
+    obj <- 0.5 * sum((A %*% x - b)^2) + lam * Rfunc(w) + 0.5 * kap * sum((y - w)^2)
+    err <- sqrt(sum((w - wm)^2)) / normb
+    wm <- w
+    
+    noi <- noi + 1
+    if (noi %% ptf == 0) {
+      print('iter'); print(noi)
+      print('obj'); print(obj)
+      print('err'); print(err)
+    }
+    if (noi >= itm) {
+      break
+    }
   }
-  
-  
 }
