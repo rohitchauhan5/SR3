@@ -32,17 +32,19 @@ sr3_parse_input <- function(A, b, m, n, ...) {
   defaultifusenormal <- 0
   defaultifuselsqr <- 0
 
-  isdouble <- function(x) checkmate::checkDouble(x)
-  isdoublep <- function(x) checkmate::checkDouble(x, lower = 0) && all(x > 0)
-  isdoublepp <- function(x) checkmate::checkDouble(x, lower = 0)
-  isdoublem <- function(x) checkmate::checkDouble(x, lower = 0, len = m)
-  isdoublen <- function(x) checkmate::checkDouble(x, lower = 0, len = n)
-  isnumericp <- function(x) checkmate::checkNumeric(x) && x > 0
-  isnumericpp <- function(x) checkmate::checkNumeric(x, lower = 0)
-  isfunhandle <- function(x) checkmate::checkFunction(x)
+  isdouble <- function(x) checkmate::expect_double(x)
+  isdoublep <- function(x) checkmate::expect_double(x, lower = 0) && all(x > 0)
+  isdoublepp <- function(x) checkmate::expect_double(x, lower = 0)
+  isdoublem <- function(x) checkmate::expect_double(x, lower = 0, len = m)
+  isdoublen <- function(x) checkmate::expect_double(x, lower = 0, len = n)
+  isnumericp <- function(x) checkmate::expect_numeric(x) && x > 0
+  isnumericpp <- function(x) checkmate::expect_numeric(x, lower = 0)
+  isfunhandle <- function(x) checkmate::expect_function(x)
 
+  # TODO: Have actual assertions or change above functions to
+  # expect_* variants
   isdouble(A)
-  isdoublem(b)
+  isdoublen(b)
   isdoublen(defaultx0) # x0
   isdouble(defaultw0)# w0
   isdouble(defaultC)
