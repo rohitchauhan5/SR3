@@ -143,9 +143,13 @@ sr3 <- function(A, b, ...) {
   sys <- rbind(A, rootkap * C)
   u <- rbind(b, rootkap * w)
   # x = lsqr(sys,u,tol/2,100,[],[], x); 
+  # TODO: Do not use solve, use lm?
   x <- solve(sys, u, tol/2)
   
   # TODO: QR
+  Q <- qr(rbind(A, rootkap*C))
+    
+    
   wm <- w
   err <- 2.0 * tol
   noi <- 0
@@ -153,10 +157,10 @@ sr3 <- function(A, b, ...) {
   normb <- norm(b, type = '2')
   
   while (err >= tol) {
-    if (ifuselsqr) {
-      u <- rbind(b, rootkap * w)
-      x <- solve(sys, u, tol/2) 
-    }
+#    if (ifuselsqr) {
+#      u <- rbind(b, rootkap * w)
+#      x <- solve(sys, u, tol/2) 
+#    }
     
     y <- C %*% x
     
@@ -179,3 +183,14 @@ sr3 <- function(A, b, ...) {
     }
   }
 }
+
+
+# Testing
+# R
+# b <- matrix(c(4, 3, 1, -2), 4, 1)
+#  M <- matrix(c(
+# 3,     4,     5,     6,
+# 1,     2,     3,    6,
+# 6,     3,     7,    5), 3, 4, byrow=TRUE)
+
+# MATLAB
