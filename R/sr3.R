@@ -87,7 +87,7 @@ reg_prox <- function(p, alpha) {
   l1w <- p$l1w
   R <- function(x) l1w*sum(abs(x))
   Rprox <- function(x, alpha) {
-    alpha1 = l1w*alpha
+    alpha1 <- l1w*alpha
     sign(x) * (abs(x) - alpha1) * (abs(x) > alpha1)
   }
 
@@ -139,16 +139,17 @@ sr3 <- function(A, b, ...) {
   
   # TODO: use the normal equations and Cholesky factorization
   
-  # Least squares
-  sys <- rbind(A, rootkap * C)
-  u <- rbind(b, rootkap * w)
+  ## Least squares
+  # sys <- rbind(A, rootkap * C)
+  # u <- rbind(b, rootkap * w)
   # x = lsqr(sys,u,tol/2,100,[],[], x); 
   # TODO: Do not use solve, use lm?
-  x <- solve(sys, u, tol/2)
+  # x <- solve(sys, u, tol/2)
   
   # TODO: QR
-  Q <- qr(rbind(A, rootkap*C))
-    
+  X <- qr(rbind(A, rootkap*C))
+  Q <- qr.Q(X)
+  R <- qr.R(X)
     
   wm <- w
   err <- 2.0 * tol
@@ -162,6 +163,11 @@ sr3 <- function(A, b, ...) {
 #      x <- solve(sys, u, tol/2) 
 #    }
     
+    # QR
+    u <- t(Q) %*% rbind(b, rootkap * w)
+    # optimize for upper triangular as in MATLAB code
+    x <- solve(R, u)
+    
     y <- C %*% x
     
     w <- Rprox(y, alpha)
@@ -173,7 +179,12 @@ sr3 <- function(A, b, ...) {
     wm <- w
     
     noi <- noi + 1
-    if (noi %% ptf == 0) {
+    
+    # print(paste0("pts", ptf))
+    # print(paste0("noi", noi))
+    # modptfnoi <-  noi %% ptf
+    # print(paste0("ptf %% noi", modptfnoi))
+    if ((noi %% ptf == 0) | ptf == 0) {
       print('iter'); print(noi)
       print('obj'); print(obj)
       print('err'); print(err)
@@ -182,6 +193,7 @@ sr3 <- function(A, b, ...) {
       break
     }
   }
+  print(x)
 }
 
 
@@ -189,8 +201,8 @@ sr3 <- function(A, b, ...) {
 # R
 # b <- matrix(c(4, 3, 1, -2), 4, 1)
 #  M <- matrix(c(
-# 3,     4,     5,     6,
-# 1,     2,     3,    6,
-# 6,     3,     7,    5), 3, 4, byrow=TRUE)
+# 3     4     5     6
+# 1     2     3    6
+# 6     3     7    5), 3, 4, byrow=TRUE)
 
 # MATLAB
