@@ -4,7 +4,7 @@ test_that("parser returns a list of 18 elements", {
   # Input validation for default arugments should
   # work if this test passes.
   A <- matrix(0, 3, 4)
-  b <- matrix(0, 4, 1)
+  b <- matrix(0, 3, 1)
   m <- dim(A)[1]
   n <- dim(A)[2]
 
