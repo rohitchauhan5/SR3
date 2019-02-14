@@ -195,14 +195,3 @@ sr3 <- function(A, b, ...) {
   }
   print(x)
 }
-
-
-# Testing
-# R
-# b <- matrix(c(4, 3, 1, -2), 4, 1)
-#  M <- matrix(c(
-# 3     4     5     6
-# 1     2     3    6
-# 6     3     7    5), 3, 4, byrow=TRUE)
-
-# MATLAB
