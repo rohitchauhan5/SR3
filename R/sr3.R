@@ -84,7 +84,13 @@ sr3_parse_input <- function(A, b, m, n, ...) {
 #'  relaxed expression (\code{kap}).
 #' @return A list of \code{R} and \code{Rprox}
 reg_prox <- function(p, alpha) {
+  
+  # Call l012Rprox function with ifprox and without ifprox
+  # l012Rprox <- function(x,alpha,l0w,l1w,l2w,ifprox) {
+  
+  l0w <- p$l0w
   l1w <- p$l1w
+  l2w <- p$l2w
   R <- function(x) l1w*sum(abs(x))
   Rprox <- function(x, alpha) {
     alpha1 <- l1w*alpha
@@ -134,6 +140,7 @@ sr3 <- function(A, b, ...) {
   Rprox <- parsed$Rprox
   # Use this to override defaults
   # results <- reg_prox(parsed, alpha)
+  
   # Rfunc <- results$R
   # Rprox <- results$Rprox
   
