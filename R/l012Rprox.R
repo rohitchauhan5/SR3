@@ -9,15 +9,14 @@ norm_vec <- function(x) sqrt(sum(x^2))
 
 l012Rprox <- function(x,alpha,l0w,l1w,l2w,ifprox) {
   
-  mode <- (l0w != 0)*1 + (l1w != 0)*2 + (l2w != 0)*4;(l0w != 0)*1;(l1w != 0)*2
+  mode <- (l0w != 0)*1 + (l1w != 0)*2 + (l2w != 0)*4;#(l0w != 0)*1;(l1w != 0)*2
   
   if(mode == 1){
     if ( ifprox == TRUE ) {
       alpha0 <- l0w * alpha # Ques : alpha is scalar?
       z <- x * (abs(x) > sqrt(2*alpha0))
-      z <- x    ()
     } else {
-      z <- l0w * nnzero(x)
+      z <- l0w * Matrix::nnzero(x)
     }
   } else if (mode == 2){
     if ( ifprox == TRUE ) {
@@ -28,18 +27,18 @@ l012Rprox <- function(x,alpha,l0w,l1w,l2w,ifprox) {
     }
   } else if (mode == 3) {
     if ( ifprox == TRUE ) {
-      alpha0 <- l0w * alpha0
-      alpha1 <- l1w * alpha0
+      alpha0 <- l0w * alpha
+      alpha1 <- l1w * alpha
       z <- sign(x) * (abs(x) - alpha1) * (abs(x) > alpha1)
       fz <- (abs(z) != 0) * alpha0 + abs(z) * alpha1 + 0.5 * abs(z - x)^2
       z <- z * (fz < 0.5 * abs(x)^2)
     } else {
-      z <- l0w * nnzero(x) + l1w * sum(abs(x))
+      z <- l0w * Matrix::nnzero(x) + l1w * sum(abs(x))
     }
   } else if (mode == 4) {
     if ( ifprox == TRUE) {
-      alpha2 <- l2w * alpha2
-      z <- x / (1.0 + alpha2)
+      alpha2 <- l2w * alpha
+      z <- x / (1.0 + alpha)
     } else {
       z <- l2w * 05 * sum(abs(x)^2)
     }
@@ -51,7 +50,7 @@ l012Rprox <- function(x,alpha,l0w,l1w,l2w,ifprox) {
       fz <- (abs(z) != 0) * alpha0 + 0.5*alpha2*(abs(z)^2)+0.5*(abs(z-x)^2)
       z <- z * (fz < 0.5 * (abs(x)^2))
     } else {
-      z <- l0w * nnzero(x) + l2w * 0.5 * sum(abs(x)^2)
+      z <- l0w * Matrix::nnzero(x) + l2w * 0.5 * sum(abs(x)^2)
     }
   } else if(mode == 6) {
     if (ifprox == TRUE) {
@@ -77,6 +76,6 @@ l012Rprox <- function(x,alpha,l0w,l1w,l2w,ifprox) {
         z <- x
       }
   }
-  print(mode)
+  
   return(z)
 }

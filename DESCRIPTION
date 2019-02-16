@@ -18,7 +18,8 @@ Depends: R (>= 3.5.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports: slam,
-  checkmate
+Imports: 
+    checkmate,
+    Matrix
 RoxygenNote: 6.1.1
 Suggests: testthat
