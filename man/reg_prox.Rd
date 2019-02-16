@@ -2,12 +2,19 @@
 % Please edit documentation in R/sr3.R
 \name{reg_prox}
 \alias{reg_prox}
-\title{Function to return prox operator and regularization function}
+\title{Prox operators}
 \usage{
-reg_prox(p)
+reg_prox(p, alpha)
 }
 \arguments{
-\item{p}{Parser list with input values}
+\item{p}{The argument to \code{sr3_parse_input} which is a list that
+contains the mode variable for regularization}
+
+\item{alpha}{Penalty term for R (\code{lam}) divided by penalty term for
+relaxed expression (\code{kap}).}
+}
+\value{
+A list of \code{R} and \code{Rprox}
 }
 \description{
 Function to return prox operator and regularization function

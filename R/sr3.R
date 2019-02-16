@@ -32,14 +32,14 @@ sr3_parse_input <- function(A, b, m, n, ...) {
   defaultifusenormal <- 0
   defaultifuselsqr <- 0
 
-  isdouble <- function(x) checkmate::checkDouble(x)
-  isdoublep <- function(x) checkmate::checkDouble(x, lower = 0) && all(x > 0)
-  isdoublepp <- function(x) checkmate::checkDouble(x, lower = 0)
-  isdoublem <- function(x) checkmate::checkDouble(x, lower = 0, len = m)
-  isdoublen <- function(x) checkmate::checkDouble(x, lower = 0, len = n)
-  isnumericp <- function(x) checkmate::checkNumeric(x) && x > 0
-  isnumericpp <- function(x) checkmate::checkNumeric(x, lower = 0)
-  isfunhandle <- function(x) checkmate::checkFunction(x)
+  isdouble <- function(x) checkmate::expect_double(x)
+  isdoublep <- function(x) checkmate::expect_double(x, lower = 0) && all(x > 0)
+  isdoublepp <- function(x) checkmate::expect_double(x, lower = 0)
+  isdoublem <- function(x) checkmate::expect_double(x, len = m)
+  isdoublen <- function(x) checkmate::expect_double(x, len = n)
+  isnumericp <- function(x) checkmate::expect_numeric(x) && x > 0
+  isnumericpp <- function(x) checkmate::expect_numeric(x, lower = 0)
+  isfunhandle <- function(x) checkmate::expect_function(x)
 
   isdouble(A)
   isdoublem(b)
@@ -74,15 +74,30 @@ sr3_parse_input <- function(A, b, m, n, ...) {
 }
 
 
+#' Prox operators
+#'
 #' Function to return prox operator and regularization function
 #'
-#' @param p Parser list with input values
-reg_prox <- function(p) {
-  # TODO: Replace placeholders with actual functions
-  R <- function(x) NULL
-  Rprox <- function(x) NULL
+#' @param p The argument to \code{sr3_parse_input} which is a list that
+#' contains the mode variable for regularization
+#' @param alpha Penalty term for R (\code{lam}) divided by penalty term for
+#'  relaxed expression (\code{kap}).
+#' @return A list of \code{R} and \code{Rprox}
+reg_prox <- function(p, alpha) {
+  
+  # Call l012Rprox function with ifprox and without ifprox
+  # l012Rprox <- function(x,alpha,l0w,l1w,l2w,ifprox) {
+  
+  l0w <- p$l0w
+  l1w <- p$l1w
+  l2w <- p$l2w
+  R <- function(x) l1w*sum(abs(x))
+  Rprox <- function(x, alpha) {
+    alpha1 <- l1w*alpha
+    sign(x) * (abs(x) - alpha1) * (abs(x) > alpha1)
+  }
 
-  return(list(R, Rprox))
+  return(list(R = R, Rprox = Rprox))
 }
 
 
@@ -100,6 +115,90 @@ reg_prox <- function(p) {
 sr3 <- function(A, b, ...) {
   m <- dim(A)[1]
   n <- dim(A)[2]
-
+  
+  parsed <- sr3_parse_input(A, b, m, n)
+  
+  
+  x <- parsed$x0
+  w <- parsed$w0
+  C <- parsed$C
+  lam <- parsed$lam
+  kap <- parsed$kap
+  itm <- parsed$itm
+  tol <- parsed$tol
+  ptf <- parsed$ptf
+  ifusenormal <- parsed$ifusenormal
+  ifuselsqr <- parsed$ifuselsqr
+  
+  md <- nrow(C)
+  if (md != n) w <- matrix(0L, nrow = md, ncol = 1)
+  
+  rootkap <- sqrt(kap)
+  alpha <- lam/kap
+  
+  Rfunc <- parsed$R
+  Rprox <- parsed$Rprox
+  # Use this to override defaults
+  # results <- reg_prox(parsed, alpha)
+  
+  # Rfunc <- results$R
+  # Rprox <- results$Rprox
+  
+  # TODO: use the normal equations and Cholesky factorization
+  
+  ## Least squares
+  # sys <- rbind(A, rootkap * C)
+  # u <- rbind(b, rootkap * w)
+  # x = lsqr(sys,u,tol/2,100,[],[], x); 
+  # TODO: Do not use solve, use lm?
+  # x <- solve(sys, u, tol/2)
+  
+  # TODO: QR
+  X <- qr(rbind(A, rootkap*C))
+  Q <- qr.Q(X)
+  R <- qr.R(X)
+    
+  wm <- w
+  err <- 2.0 * tol
+  noi <- 0
+  
+  normb <- norm(b, type = '2')
+  
+  while (err >= tol) {
+#    if (ifuselsqr) {
+#      u <- rbind(b, rootkap * w)
+#      x <- solve(sys, u, tol/2) 
+#    }
+    
+    # QR
+    u <- t(Q) %*% rbind(b, rootkap * w)
+    # optimize for upper triangular as in MATLAB code
+    x <- solve(R, u)
+    
+    y <- C %*% x
+    
+    w <- Rprox(y, alpha)
+    
+    # TODO: write obj
+    # obj = 0.5*sum((A*x-b).^2) + lam*Rfunc(w) + 0.5*kap*sum((y-w).^2);
+    obj <- 0.5 * sum((A %*% x - b)^2) + lam * Rfunc(w) + 0.5 * kap * sum((y - w)^2)
+    err <- sqrt(sum((w - wm)^2)) / normb
+    wm <- w
+    
+    noi <- noi + 1
+    
+    # print(paste0("pts", ptf))
+    # print(paste0("noi", noi))
+    # modptfnoi <-  noi %% ptf
+    # print(paste0("ptf %% noi", modptfnoi))
+    if ((noi %% ptf == 0) | ptf == 0) {
+      print('iter'); print(noi)
+      print('obj'); print(obj)
+      print('err'); print(err)
+    }
+    if (noi >= itm) {
+      break
+    }
+  }
+  print(x)
 }
-
