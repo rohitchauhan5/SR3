@@ -13,7 +13,7 @@
 #' @param n number of columns of A
 #' @param ... optional arguments
 #' @return List of \code{R} and \code{Rprox}
-sr3_parse_input <- function(A, b, m, n, ...) {
+sr3_parse_input <- function(A, b, m, n) {
 
   defaultx0 <- matrix(0, n, 1)
   defaultw0 <- matrix(0, n, 1)
@@ -91,11 +91,13 @@ reg_prox <- function(p, alpha) {
   l0w <- p$l0w
   l1w <- p$l1w
   l2w <- p$l2w
-  R <- function(x) l1w*sum(abs(x))
-  Rprox <- function(x, alpha) {
-    alpha1 <- l1w*alpha
-    sign(x) * (abs(x) - alpha1) * (abs(x) > alpha1)
-  }
+#   R <- function(x) l1w*sum(abs(x))
+#   Rprox <- function(x, alpha) {
+#     alpha1 <- l1w*alpha
+#     sign(x) * (abs(x) - alpha1) * (abs(x) > alpha1)
+#   }
+  R <- function(x) l012Rprox(x, alpha,l0w,l1w,l2w,FALSE)
+  Rprox <- function(x ,alpha) l012Rprox(x, alpha,l0w,l1w,l2w,TRUE)
 
   return(list(R = R, Rprox = Rprox))
 }
@@ -112,7 +114,7 @@ reg_prox <- function(p, alpha) {
 #' @param A double precision real or complex matrix (dimension, say, MxN)
 #' @param b double precision real or complex vector (length M)
 #' @param ... Optional arguments
-sr3 <- function(A, b, ...) {
+sr3 <- function(A, b, mode = '1', l0w = 0, l1w = 0, l2w = 0) {
   m <- dim(A)[1]
   n <- dim(A)[2]
   

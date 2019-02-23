@@ -69,7 +69,7 @@ l012Rprox <- function(x,alpha,l0w,l1w,l2w,ifprox) {
         fz = (abs(z)!=0)*alpha0+abs(z)*alpha1+0.5*alpha2*abs(z)^2+0.5*abs(z-x)^2
         z = z*(fz < 0.5*abs(x)^2)
       } else {
-        z = l0w*nnz(x)+l1w*sum(abs(x))+l2w*0.5*sum(abs(x)^2)
+        z = l0w*nnzero(x)+l1w*sum(abs(x))+l2w*0.5*sum(abs(x)^2)
     }
   } else {
       if ( ifprox == TRUE){
