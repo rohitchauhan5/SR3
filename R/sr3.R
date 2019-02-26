@@ -18,7 +18,7 @@ sr3_parse_input <- function(A, b, m, n) {
   defaultx0 <- matrix(0, n, 1)
   defaultw0 <- matrix(0, n, 1)
   defaultC <- diag(n) # TODO: Convert this to sparse
-  defaultlam <- 1.0
+  defaultlam <- .004
   defaultkap <- 1.0
   defaultitm <- 100
   defaulttol <- 1e-6
@@ -91,6 +91,9 @@ reg_prox <- function(p, alpha) {
   l0w <- p$l0w
   l1w <- p$l1w
   l2w <- p$l2w
+  print(paste0("l0w ", l0w))
+  print(paste0("l1w ", l1w))
+  print(paste0("l2w ", l2w))
 #   R <- function(x) l1w*sum(abs(x))
 #   Rprox <- function(x, alpha) {
 #     alpha1 <- l1w*alpha
@@ -114,12 +117,11 @@ reg_prox <- function(p, alpha) {
 #' @param A double precision real or complex matrix (dimension, say, MxN)
 #' @param b double precision real or complex vector (length M)
 #' @param ... Optional arguments
-sr3 <- function(A, b, mode = '1', l0w = 0, l1w = 0, l2w = 0) {
+sr3 <- function(A, b, mode = '1', lam = 1, l0w = 0, l1w = 0, l2w = 0) {
   m <- dim(A)[1]
   n <- dim(A)[2]
   
   parsed <- sr3_parse_input(A, b, m, n)
-  
   
   x <- parsed$x0
   w <- parsed$w0
@@ -141,10 +143,29 @@ sr3 <- function(A, b, mode = '1', l0w = 0, l1w = 0, l2w = 0) {
   Rfunc <- parsed$R
   Rprox <- parsed$Rprox
   # Use this to override defaults
-  # results <- reg_prox(parsed, alpha)
+  if (mode == '0') {
+    parsed$l0w <- 1
+    parsed$l1w <- 0
+    parsed$l2w <- 0
+  } else if (mode == '1') {
+    parsed$l0w <- 0
+    parsed$l1w <- 1
+    parsed$l2w <- 0
+  } else if (mode == '2') {
+    parsed$l0w <- 0
+    parsed$l1w <- 0
+    parsed$l2w <- 1
+  } else {
+    parsed$l0w <- p$l0w
+    parsed$l1w <- p$l1w
+    parsed$l2w <- p$l2w
+  }
   
-  # Rfunc <- results$R
-  # Rprox <- results$Rprox
+  results <- reg_prox(parsed, alpha)
+  
+  Rfunc <- results$R
+  Rprox <- results$Rprox
+  
   
   # TODO: use the normal equations and Cholesky factorization
   
@@ -194,13 +215,15 @@ sr3 <- function(A, b, mode = '1', l0w = 0, l1w = 0, l2w = 0) {
     # modptfnoi <-  noi %% ptf
     # print(paste0("ptf %% noi", modptfnoi))
     if ((noi %% ptf == 0) | ptf == 0) {
-      print('iter'); print(noi)
-      print('obj'); print(obj)
-      print('err'); print(err)
+      print(paste0('iter ', noi))
+      print(paste0('obj ', obj))
+      print(paste0('err ', err))
     }
     if (noi >= itm) {
       break
     }
   }
-  print(x)
+  # print(x)
+  return(list(x=x, w=w))
 }
+

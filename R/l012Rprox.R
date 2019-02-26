@@ -72,9 +72,8 @@ l012Rprox <- function(x,alpha,l0w,l1w,l2w,ifprox) {
         z = l0w*nnzero(x)+l1w*sum(abs(x))+l2w*0.5*sum(abs(x)^2)
     }
   } else {
-      if ( ifprox == TRUE){
-        z <- x
-      }
+      if (ifprox) z <- x
+      else z <- 0
   }
   
   return(z)
