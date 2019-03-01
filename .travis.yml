@@ -3,9 +3,6 @@
 language: R
 sudo: false
 cache: packages
-
-r_packages:
-  - testthat
   
 after_success:
   - Rscript -e 'covr::codecov()'
