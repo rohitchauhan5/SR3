@@ -1,3 +1,5 @@
+context('Prox operators from l012Rprox')
+
 # #
 # test_that("tall matrix A returns correct value", {
 #   A <-

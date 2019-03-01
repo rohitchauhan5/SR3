@@ -91,9 +91,9 @@ reg_prox <- function(p, alpha) {
   l0w <- p$l0w
   l1w <- p$l1w
   l2w <- p$l2w
-  print(paste0("l0w ", l0w))
-  print(paste0("l1w ", l1w))
-  print(paste0("l2w ", l2w))
+#  print(paste0("l0w ", l0w))
+#  print(paste0("l1w ", l1w))
+#  print(paste0("l2w ", l2w))
 #   R <- function(x) l1w*sum(abs(x))
 #   Rprox <- function(x, alpha) {
 #     alpha1 <- l1w*alpha
@@ -156,9 +156,9 @@ sr3 <- function(A, b, mode = '1', lam = 1, l0w = 0, l1w = 0, l2w = 0) {
     parsed$l1w <- 0
     parsed$l2w <- 1
   } else {
-    parsed$l0w <- p$l0w
-    parsed$l1w <- p$l1w
-    parsed$l2w <- p$l2w
+    parsed$l0w <- l0w
+    parsed$l1w <- l1w
+    parsed$l2w <- l2w
   }
   
   results <- reg_prox(parsed, alpha)

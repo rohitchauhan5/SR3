@@ -4,7 +4,7 @@
 \alias{sr3_parse_input}
 \title{Parse the input to SR3}
 \usage{
-sr3_parse_input(A, b, m, n, ...)
+sr3_parse_input(A, b, m, n)
 }
 \arguments{
 \item{A}{double precision real or complex matrix (dimension, say, MxN)}

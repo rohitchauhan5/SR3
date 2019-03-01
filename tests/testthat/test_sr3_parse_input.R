@@ -47,7 +47,6 @@ test_that("tall matrix A returns correct value", {
   result <- sr3(A = A, b = b)
   x <- result$x
   w <- result$w
-  print(w)
   result_from_MATLAB_x <- matrix(c(0.1993, 0.2393, 0.2005, 0.2122, 0.4120), 5, 1, byrow=TRUE)
   result_from_MATLAB_w <- matrix(0, 5, 1, byrow=TRUE)
   expect_equal(x, result_from_MATLAB_x, tolerance=1e-4)

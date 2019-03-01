@@ -4,7 +4,7 @@
 \alias{sr3}
 \title{SR3}
 \usage{
-sr3(A, b, ...)
+sr3(A, b, mode = "1", lam = 1, l0w = 0, l1w = 0, l2w = 0)
 }
 \arguments{
 \item{A}{double precision real or complex matrix (dimension, say, MxN)}
