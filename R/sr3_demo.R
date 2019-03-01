@@ -25,3 +25,6 @@ lam1 <- 0.01
 lam0 <- 0.004
 
 results <- sr3(A, b, mode = '0', lam = lam0)
+results <- sr3(A, b, lam = lam1)
+
+xl2 <- qr.solve(A, b)

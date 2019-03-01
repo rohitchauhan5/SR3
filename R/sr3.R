@@ -18,7 +18,7 @@ sr3_parse_input <- function(A, b, m, n) {
   defaultx0 <- matrix(0, n, 1)
   defaultw0 <- matrix(0, n, 1)
   defaultC <- diag(n) # TODO: Convert this to sparse
-  defaultlam <- .004
+  defaultlam <- 1.0
   defaultkap <- 1.0
   defaultitm <- 100
   defaulttol <- 1e-6
@@ -214,7 +214,9 @@ sr3 <- function(A, b, mode = '1', lam = 1, l0w = 0, l1w = 0, l2w = 0) {
     # print(paste0("noi", noi))
     # modptfnoi <-  noi %% ptf
     # print(paste0("ptf %% noi", modptfnoi))
-    if ((noi %% ptf == 0) | ptf == 0) {
+    if ( ptf == 0) {
+      next
+    } else if (noi %% ptf == 0) {
       print(paste0('iter ', noi))
       print(paste0('obj ', obj))
       print(paste0('err ', err))
